@@ -1,7 +1,7 @@
 # wine-xinput
 XInput for Wine based on DirectInput
 
-In order to exercise DirectInput I implemented support for XInput. XInput is a very simple way to access joysticks that is supposed to superseed DirectInput, but it lacks many features and is more targeted to Xbox controllers. It is closer to the old WinMM joystick API where you need one single function to read joystick data without may setup necessary.
+In order to exercise DirectInput I implemented support for XInput. XInput is a very simple way to access joysticks that is supposed to superseed DirectInput, but it lacks many features and is more targeted to Xbox controllers. It is closer to the old WinMM joystick API where you need one single function to read joystick data without any setup necessary.
 
 I did not limit the implementation to Microsoft only controllers, it will work with anything that has at least 2 axes and 8 buttons. It is important to understand that the mapping is always based in the Xbox controller so, as in Windows, other controllers will have messed up mapping.
 
