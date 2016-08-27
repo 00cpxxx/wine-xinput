@@ -8,3 +8,5 @@ I did not limit the implementation to Microsoft only controllers, it will work w
 The implementation was tested on Wine 1.9.17 but also applies to 1.8.4 and probably older versions since XInput code is not touched in a long time.
 
 The only games tested were Broforce and Brothers: A Tale of Two Sons. I appreciate more testing and feedback. I only have Xbox 360 controllers so any testing on the original Xbox controllers and Xbox One controllers are welcome.
+
+The force feedback emulation is not accurate but it is enough for the games I tested, it may be problematic on other games that require only left or right motor enabled.
