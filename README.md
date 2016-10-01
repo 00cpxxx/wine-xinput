@@ -20,7 +20,7 @@ It is important to disable Wine (js) joysticks to avoid the same joystick being 
 Why the silly patch names? After working so long with "force feedback" in Wine I thought they were proper names.
 
 Games tested so far:
-* Broforce (July 4th 2016 version, older versions have a XInputGetStateEx game bug)
+* Broforce
 * Brothers: A Tale of Two Sons
 * Momodora: Reverie Under the Moonlight
 
