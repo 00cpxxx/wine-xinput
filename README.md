@@ -27,3 +27,8 @@ Games tested so far:
 * Momodora: Reverie Under the Moonlight
 
 I appreciate more testing and feedback. 
+
+If the patch is compiled but the game still didn't recognize the controller something is wrong, it could be due to different reasons. For instance:
+* Wine DirectInput did not find your controller, check "wine control joy.cpl". Always start the game with the controller previously plugged.
+* Some games may install native xinput1\_\*.dll versions and Wine may be trying to load them instead of builtin. Ensure that there are no native xinput DLL's in the system32 folder.
+* Some game controller mapping tool may be hooking the Xinput calls so the calls are not reaching Wine's DLL. The best example is x360ce.
