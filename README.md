@@ -19,6 +19,8 @@ It is important to disable Wine (js) joysticks to avoid the same joystick being 
 
 Why the silly patch names? After working so long with "force feedback" in Wine I thought they were proper names.
 
+Why not merging this into official Wine? Because Wine is working towards a different approach to unify joystick input for the different interfaces (WinMM, DirectInput, XInput) using a single HID library. This will simplify the implementations of these DLL's while keeping all ugly code into a single place. So my approach of Xinput from Dinput is not acceptable.
+
 Games tested so far:
 * Broforce
 * Brothers: A Tale of Two Sons
