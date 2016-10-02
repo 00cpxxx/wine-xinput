@@ -24,6 +24,8 @@ Why not merging this into official Wine? Because Wine is working towards a diffe
 Games tested so far:
 * Broforce
 * Brothers: A Tale of Two Sons
+* DiRT 3 (tested by user Enverex)
+* Double Dragon Neon (tested by user Enverex)
 * Momodora: Reverie Under the Moonlight
 
 I appreciate more testing and feedback. 
