@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 04732eb..adc2fb6 100644
+index 5f88ca1..c6b2935 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -29,7 +29,7 @@ index 04732eb..adc2fb6 100644
  #include "config.h"
  #include <assert.h>
  #include <stdarg.h>
-@@ -27,18 +29,346 @@
+@@ -27,18 +29,348 @@
  #include "winbase.h"
  #include "winerror.h"
  
@@ -72,6 +72,20 @@ index 04732eb..adc2fb6 100644
 +} dinput;
 +
 +#define STARTUP_DINPUT if (!dinput.iface) dinput_start();
++
++static const int xbox_buttons[] = {
++    XINPUT_GAMEPAD_A,
++    XINPUT_GAMEPAD_B,
++    XINPUT_GAMEPAD_X,
++    XINPUT_GAMEPAD_Y,
++    XINPUT_GAMEPAD_LEFT_SHOULDER,
++    XINPUT_GAMEPAD_RIGHT_SHOULDER,
++    XINPUT_GAMEPAD_BACK,
++    XINPUT_GAMEPAD_START,
++    XINPUT_GAMEPAD_GUIDE,
++    XINPUT_GAMEPAD_LEFT_THUMB,
++    XINPUT_GAMEPAD_RIGHT_THUMB
++};
 +
 +/* ========================= Internal functions ============================= */
 +
@@ -124,7 +138,8 @@ index 04732eb..adc2fb6 100644
 +    if (dinput_caps.dwAxes == 6 && dinput_caps.dwButtons == 11  && dinput_caps.dwPOVs == 1)
 +        TRACE("This controller has the same number of buttons/axes from xbox 360, should work...\n");
 +    else
-+        FIXME("This is not a known xbox controller, using anyway. Expect problems!\n");
++        FIXME("This is not a known xbox controller (%d %d %d), using anyway. Expect problems!\n",
++              dinput_caps.dwAxes, dinput_caps.dwButtons, dinput_caps.dwPOVs);
 +
 +    return TRUE;
 +}
@@ -152,19 +167,6 @@ index 04732eb..adc2fb6 100644
 +
 +static void dinput_joystate_to_xinput(DIJOYSTATE2 *js, XINPUT_GAMEPAD_EX *gamepad, struct CapsFlags *caps)
 +{
-+    static const int xbox_buttons[] = {
-+        XINPUT_GAMEPAD_A,
-+        XINPUT_GAMEPAD_B,
-+        XINPUT_GAMEPAD_X,
-+        XINPUT_GAMEPAD_Y,
-+        XINPUT_GAMEPAD_LEFT_SHOULDER,
-+        XINPUT_GAMEPAD_RIGHT_SHOULDER,
-+        XINPUT_GAMEPAD_BACK,
-+        XINPUT_GAMEPAD_START,
-+        XINPUT_GAMEPAD_GUIDE,
-+        XINPUT_GAMEPAD_LEFT_THUMB,
-+        XINPUT_GAMEPAD_RIGHT_THUMB
-+    };
 +    int i, buttons;
 +
 +    gamepad->dwPaddingReserved = 0;
@@ -378,7 +380,7 @@ index 04732eb..adc2fb6 100644
  BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  {
      switch(reason)
-@@ -54,23 +384,53 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
+@@ -52,23 +384,53 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  
  void WINAPI XInputEnable(BOOL enable)
  {
@@ -439,7 +441,7 @@ index 04732eb..adc2fb6 100644
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -81,35 +441,36 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,35 +441,36 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -484,7 +486,7 @@ index 04732eb..adc2fb6 100644
  }
  
  DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE keystroke)
-@@ -124,19 +485,39 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
+@@ -122,19 +485,68 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
      return ERROR_NOT_SUPPORTED;
  }
  
@@ -496,6 +498,7 @@ index 04732eb..adc2fb6 100644
  DWORD WINAPI XInputGetCapabilities(DWORD index, DWORD flags, XINPUT_CAPABILITIES* capabilities)
  {
 -    static int warn_once;
++    WORD bits = 0, i;
 +    TRACE("(%u %d %p)\n", index, flags, capabilities);
  
 -    if (!warn_once++)
@@ -513,22 +516,50 @@ index 04732eb..adc2fb6 100644
 +
 +    capabilities->Flags = 0;
 +    if (controllers[index].caps.jedi)
++    {
 +        capabilities->Flags |= XINPUT_CAPS_FFB_SUPPORTED;
++        capabilities->Vibration.wLeftMotorSpeed = 1;
++        capabilities->Vibration.wRightMotorSpeed = 1;
++    }
++    else
++    {
++        capabilities->Vibration.wLeftMotorSpeed = 0;
++        capabilities->Vibration.wRightMotorSpeed = 0;
++    }
 +    if (controllers[index].caps.wireless)
 +        capabilities->Flags |= XINPUT_CAPS_WIRELESS;
 +    if (!controllers[index].caps.pov)
 +        capabilities->Flags |= XINPUT_CAPS_NO_NAVIGATION;
++    else
++        bits = 0xF;
 +
-+    dinput_update(index);
++    for (i = 0; i < controllers[index].caps.buttons &&
++                i < sizeof(xbox_buttons) / sizeof(*xbox_buttons); i++)
++        bits |= xbox_buttons[i];
 +
-+    capabilities->Vibration = controllers[index].vibration;
-+    capabilities->Gamepad = *(XINPUT_GAMEPAD *)&controllers[index].state_ex.Gamepad;
++    bits &= ~XINPUT_GAMEPAD_GUIDE;
++    capabilities->Gamepad.wButtons = bits;
++
++    if (controllers[index].caps.axes >= 2)
++        capabilities->Gamepad.sThumbLX = capabilities->Gamepad.sThumbLY = 1;
++    else
++        capabilities->Gamepad.sThumbLX = capabilities->Gamepad.sThumbLY = 0;
++
++    if (controllers[index].caps.axes >= 4)
++        capabilities->Gamepad.sThumbRX = capabilities->Gamepad.sThumbRY = 1;
++    else
++        capabilities->Gamepad.sThumbRX = capabilities->Gamepad.sThumbRY = 0;
++
++    if (controllers[index].caps.axes >= 6)
++        capabilities->Gamepad.bLeftTrigger = capabilities->Gamepad.bRightTrigger = 1;
++    else
++        capabilities->Gamepad.bLeftTrigger = capabilities->Gamepad.bRightTrigger = 0;
 +
 +    return ERROR_SUCCESS;
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -153,12 +534,31 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -151,12 +563,31 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
  
  DWORD WINAPI XInputGetBatteryInformation(DWORD index, BYTE type, XINPUT_BATTERY_INFORMATION* battery)
  {
