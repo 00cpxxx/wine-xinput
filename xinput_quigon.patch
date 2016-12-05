@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..c6b2935 100644
+index 5f88ca1..72d2c45 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -29,7 +29,7 @@ index 5f88ca1..c6b2935 100644
  #include "config.h"
  #include <assert.h>
  #include <stdarg.h>
-@@ -27,18 +29,348 @@
+@@ -27,18 +29,356 @@
  #include "winbase.h"
  #include "winerror.h"
  
@@ -372,6 +372,14 @@ index 5f88ca1..c6b2935 100644
 +    {
 +        controllers[index].state_ex.Gamepad = gamepad;
 +        controllers[index].state_ex.dwPacketNumber++;
++        TRACE("Buttons 0x%x, LT %d, RT %d, LX %d, LY %d, RX %d, RY %d\n",
++              gamepad.wButtons,
++              gamepad.bLeftTrigger,
++              gamepad.bRightTrigger,
++              gamepad.sThumbLX,
++              gamepad.sThumbLY,
++              gamepad.sThumbRX,
++              gamepad.sThumbRY);
 +    }
 +}
 +
@@ -380,7 +388,7 @@ index 5f88ca1..c6b2935 100644
  BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  {
      switch(reason)
-@@ -52,23 +384,53 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
+@@ -52,23 +392,53 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  
  void WINAPI XInputEnable(BOOL enable)
  {
@@ -441,7 +449,7 @@ index 5f88ca1..c6b2935 100644
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -79,35 +441,36 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,35 +449,36 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -486,7 +494,7 @@ index 5f88ca1..c6b2935 100644
  }
  
  DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE keystroke)
-@@ -122,19 +485,68 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
+@@ -122,19 +493,68 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
      return ERROR_NOT_SUPPORTED;
  }
  
@@ -559,7 +567,7 @@ index 5f88ca1..c6b2935 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -151,12 +563,31 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -151,12 +571,31 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
  
  DWORD WINAPI XInputGetBatteryInformation(DWORD index, BYTE type, XINPUT_BATTERY_INFORMATION* battery)
  {
