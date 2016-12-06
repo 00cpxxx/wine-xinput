@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..72d2c45 100644
+index 5f88ca1..21bc0e1 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -33,7 +33,7 @@ index 5f88ca1..72d2c45 100644
  #include "winbase.h"
  #include "winerror.h"
  
-+#include "initguid.h"
++#include "guiddef.h"
  #include "xinput.h"
 +#include "dinput.h"
 +#include "dinputd.h"
@@ -487,15 +487,20 @@ index 5f88ca1..72d2c45 100644
  
 -    return ERROR_NOT_SUPPORTED;
 +    dinput_update(index);
-+    //broforce does not pass a correct XINPUT_STATE_EX, so only copy the old struct size
++    /* Broforce does not pass a correct XINPUT_STATE_EX, so only copy the old struct size */
 +    *(XINPUT_GAMEPAD *)state_ex = *(XINPUT_GAMEPAD *)&controllers[index].state_ex;
 +
 +    return ERROR_SUCCESS;
  }
  
  DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE keystroke)
-@@ -122,19 +493,68 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
-     return ERROR_NOT_SUPPORTED;
+@@ -119,22 +490,72 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
+     if (!controllers[index].connected)
+         return ERROR_DEVICE_NOT_CONNECTED;
+ 
+-    return ERROR_NOT_SUPPORTED;
++    /* Pretend no keys are pressed */
++    return ERROR_EMPTY;
  }
  
 +/* Not defined anywhere ??? */
@@ -567,7 +572,20 @@ index 5f88ca1..72d2c45 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -151,12 +571,31 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -146,17 +567,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+     if (!controllers[index].connected)
+         return ERROR_DEVICE_NOT_CONNECTED;
+ 
+-    return ERROR_NOT_SUPPORTED;
++    /* Tests show that it is more appropriate to return GUID_NULL and success,
++     * this means that a controller is connected but the headset is not. */
++    if (render_guid)
++      *render_guid = GUID_NULL;
++    if (capture_guid)
++      *capture_guid = GUID_NULL;
++
++    return ERROR_SUCCESS;
+ }
  
  DWORD WINAPI XInputGetBatteryInformation(DWORD index, BYTE type, XINPUT_BATTERY_INFORMATION* battery)
  {
