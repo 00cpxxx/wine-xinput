@@ -5,6 +5,8 @@ In order to exercise DirectInput coding I implemented support for XInput. XInput
 
 I did not limit the implementation to Microsoft only controllers, it will work with anything that has at least 2 axes and 8 buttons. It is important to understand that the mapping is always based in the Xbox controller so, as in Windows, other controllers will have messed up mapping.
 
+This is a patch, it means you are required to apply it in to Wine source and compile Wine with it. If you are not into compiling Wine yourself and prefer using your distro packages you can check https://github.com/KoKuToru/koku-xinput-wine which still requires compilation but uses a different approach that does not touch Wine code.
+
 There are 2 different patches:
 * xinput_obiwan.patch - For Wine up to 1.9.17.
 * xinput_quigon.patch - For Wine 1.9.19 onwards.
@@ -27,6 +29,7 @@ Games tested so far:
 * DiRT 3 (tested by user Enverex)
 * Double Dragon Neon (tested by user Enverex)
 * Momodora: Reverie Under the Moonlight
+* The Adventures of Shuggy
 
 I appreciate more testing and feedback. 
 
