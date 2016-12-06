@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..21bc0e1 100644
+index 5f88ca1..6fec7c3 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -449,7 +449,7 @@ index 5f88ca1..21bc0e1 100644
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -79,35 +449,36 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,62 +449,116 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -494,9 +494,20 @@ index 5f88ca1..21bc0e1 100644
  }
  
  DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE keystroke)
-@@ -119,22 +490,72 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
-     if (!controllers[index].connected)
-         return ERROR_DEVICE_NOT_CONNECTED;
+ {
+     FIXME("(index %u, reserved %u, keystroke %p) Stub!\n", index, reserved, keystroke);
+ 
+-    if (index >= XUSER_MAX_COUNT)
+-        return ERROR_BAD_ARGUMENTS;
+-    if (!controllers[index].connected)
+-        return ERROR_DEVICE_NOT_CONNECTED;
++    if (index != XUSER_INDEX_ANY)
++    {
++        if (index >= XUSER_MAX_COUNT)
++            return ERROR_BAD_ARGUMENTS;
++        if (!controllers[index].connected)
++            return ERROR_DEVICE_NOT_CONNECTED;
++    }
  
 -    return ERROR_NOT_SUPPORTED;
 +    /* Pretend no keys are pressed */
@@ -572,7 +583,7 @@ index 5f88ca1..21bc0e1 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -146,17 +567,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -146,17 +570,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
      if (!controllers[index].connected)
          return ERROR_DEVICE_NOT_CONNECTED;
  
