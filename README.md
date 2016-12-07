@@ -31,6 +31,7 @@ Games tested so far:
 * Double Dragon Neon (tested by user Enverex)
 * Momodora: Reverie Under the Moonlight
 * The Adventures of Shuggy
+* X-Blades
 
 I appreciate more testing and feedback. 
 
