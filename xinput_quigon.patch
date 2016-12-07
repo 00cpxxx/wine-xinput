@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..6fec7c3 100644
+index 5f88ca1..7ea155a 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -207,8 +207,8 @@ index 5f88ca1..6fec7c3 100644
 +    /* Both triggers */
 +    if (caps->axes >= 6)
 +    {
-+        gamepad->bLeftTrigger = (255 * (js->lZ + 32767)) / 32767;
-+        gamepad->bRightTrigger = (255 * (js->lRz + 32767)) / 32767;
++        gamepad->bLeftTrigger = (js->lZ + 32767) * 255 / 65534;
++        gamepad->bRightTrigger = (js->lRz + 32767) * 255 / 65534;
 +    }
 +    else
 +        gamepad->bLeftTrigger = gamepad->bRightTrigger = 0;
@@ -449,7 +449,7 @@ index 5f88ca1..6fec7c3 100644
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -79,62 +449,116 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,62 +449,113 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -564,10 +564,7 @@ index 5f88ca1..6fec7c3 100644
 +    bits &= ~XINPUT_GAMEPAD_GUIDE;
 +    capabilities->Gamepad.wButtons = bits;
 +
-+    if (controllers[index].caps.axes >= 2)
-+        capabilities->Gamepad.sThumbLX = capabilities->Gamepad.sThumbLY = 1;
-+    else
-+        capabilities->Gamepad.sThumbLX = capabilities->Gamepad.sThumbLY = 0;
++    capabilities->Gamepad.sThumbLX = capabilities->Gamepad.sThumbLY = 1;
 +
 +    if (controllers[index].caps.axes >= 4)
 +        capabilities->Gamepad.sThumbRX = capabilities->Gamepad.sThumbRY = 1;
@@ -583,7 +580,7 @@ index 5f88ca1..6fec7c3 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -146,17 +570,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -146,17 +567,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
      if (!controllers[index].connected)
          return ERROR_DEVICE_NOT_CONNECTED;
  
