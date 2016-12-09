@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..7ea155a 100644
+index 5f88ca1..4e79d0d 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -29,7 +29,7 @@ index 5f88ca1..7ea155a 100644
  #include "config.h"
  #include <assert.h>
  #include <stdarg.h>
-@@ -27,18 +29,356 @@
+@@ -27,18 +29,386 @@
  #include "winbase.h"
  #include "winerror.h"
  
@@ -214,12 +214,29 @@ index 5f88ca1..7ea155a 100644
 +        gamepad->bLeftTrigger = gamepad->bRightTrigger = 0;
 +}
 +
++static BOOL dinput_acquire(int index)
++{
++    HRESULT hr;
++
++    if (!controllers[index].acquired)
++    {
++        IDirectInputDevice8_SetDataFormat(controllers[index].device, &c_dfDIJoystick2);
++        hr = IDirectInputDevice8_Acquire(controllers[index].device);
++        if (FAILED(hr))
++            WARN("Failed to acquire game controller (0x%x)\n", hr);
++        else
++            controllers[index].acquired = TRUE;
++    }
++
++    return controllers[index].acquired;
++}
++
 +static void dinput_fill_effect(DIEFFECT *effect)
 +{
 +    static DWORD axes[2] = {DIJOFS_X, DIJOFS_Y};
 +    static LONG direction[2] = {0, 0};
 +
-+    effect->dwSize = sizeof(effect);
++    effect->dwSize = sizeof(*effect);
 +    effect->dwFlags = DIEFF_CARTESIAN | DIEFF_OBJECTOFFSETS;
 +    effect->dwDuration = INFINITE;
 +    effect->dwGain = 0;
@@ -229,55 +246,77 @@ index 5f88ca1..7ea155a 100644
 +    effect->rglDirection = direction;
 +}
 +
-+static void dinput_send_effect(int index, int power)
++static void dinput_send_effect(int index, int strength)
 +{
 +    HRESULT hr;
-+    DIPERIODIC periodic;
++    union
++    {
++        DICONSTANTFORCE constant;
++        DIPERIODIC periodic;
++    } u;
 +    DIEFFECT *effect = &controllers[index].effect_data;
 +    LPDIRECTINPUTEFFECT *instance = &controllers[index].effect_instance;
++
++    if (!dinput_acquire(index))
++      return;
 +
 +    if (!*instance)
 +        dinput_fill_effect(effect);
 +
-+    effect->cbTypeSpecificParams  = sizeof(periodic);
-+    effect->lpvTypeSpecificParams = &periodic;
++    u.periodic.dwMagnitude = strength; /* constant force uses this same value */
++    u.periodic.dwPeriod = DI_SECONDS; /* 1 second */
++    u.periodic.lOffset = 0;
++    u.periodic.dwPhase = 0;
 +
-+    periodic.dwMagnitude = power;
-+    periodic.dwPeriod = DI_SECONDS; /* 1 second */
-+    periodic.lOffset = 0;
-+    periodic.dwPhase = 0;
++    effect->lpvTypeSpecificParams = &u.periodic;
 +
 +    if (!*instance)
 +    {
-+        hr = IDirectInputDevice8_CreateEffect(controllers[index].device, &GUID_Square,
-+                                              effect, instance, NULL);
-+        if (FAILED(hr))
-+        {
-+            WARN("Failed to create effect (0x%x)\n", hr);
-+            return;
-+        }
-+        if (!*instance)
-+        {
-+            WARN("Effect not returned???\n");
-+            return;
-+        }
++        static GUID types[2];
++        int i;
 +
-+        hr = IDirectInputEffect_SetParameters(*instance, effect, DIEP_AXES | DIEP_DIRECTION | DIEP_NODOWNLOAD);
-+        if (FAILED(hr))
++        types[0] = GUID_ConstantForce;
++        types[1] = GUID_Square;
++        for (i = 0; i < 2; i++)
 +        {
-+            IUnknown_Release(*instance);
-+            *instance = NULL;
-+            WARN("Failed to configure effect (0x%x)\n", hr);
++            effect->cbTypeSpecificParams = i ? sizeof(u.periodic) : sizeof(u.constant);
++
++            hr = IDirectInputDevice8_CreateEffect(controllers[index].device, &types[i],
++                                                  effect, instance, NULL);
++            if (FAILED(hr))
++                continue;
++
++            if (!*instance)
++                continue;
++
++            hr = IDirectInputEffect_SetParameters(*instance, effect,
++                    DIEP_AXES | DIEP_DIRECTION | DIEP_NODOWNLOAD | DIEP_TYPESPECIFICPARAMS);
++            if (FAILED(hr))
++            {
++                IUnknown_Release(*instance);
++                *instance = NULL;
++                continue;
++            }
++            TRACE("Using %s effect for vibration\n", i ? "square" : "constant");
++            break;
++        }
++        if (i == 2)
++        {
++            WARN("Failed to create effect (hr 0x%x, instance %p)\n", hr, *instance);
 +            return;
 +        }
++    }
++    else
++    {
++        GUID guid;
++
++        IDirectInputEffect_GetEffectGuid(*instance, &guid);
++        effect->cbTypeSpecificParams = IsEqualGUID(&GUID_Square, &guid) ? sizeof(u.periodic) : sizeof(u.constant);
 +    }
 +
 +    hr = IDirectInputEffect_SetParameters(*instance, effect, DIEP_TYPESPECIFICPARAMS | DIEP_START);
 +    if (FAILED(hr))
-+    {
 +        WARN("Failed to play effect (0x%x)\n", hr);
-+        return;
-+    }
 +}
 +
 +static BOOL CALLBACK dinput_enum_callback(const DIDEVICEINSTANCEA *instance, void *context)
@@ -342,17 +381,8 @@ index 5f88ca1..7ea155a 100644
 +
 +    if (dinput.enabled)
 +    {
-+        if (!controllers[index].acquired)
-+        {
-+            IDirectInputDevice8_SetDataFormat(controllers[index].device, &c_dfDIJoystick2);
-+            hr = IDirectInputDevice8_Acquire(controllers[index].device);
-+            if (FAILED(hr))
-+            {
-+                WARN("Failed to acquire game controller (0x%x)\n", hr);
-+                return;
-+            }
-+            controllers[index].acquired = TRUE;
-+        }
++        if (!dinput_acquire(index))
++            return;
 +
 +        IDirectInputDevice8_Poll(controllers[index].device);
 +        hr = IDirectInputDevice_GetDeviceState(controllers[index].device, sizeof(data), &data);
@@ -388,7 +418,7 @@ index 5f88ca1..7ea155a 100644
  BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  {
      switch(reason)
-@@ -52,23 +392,53 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
+@@ -52,23 +422,54 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  
  void WINAPI XInputEnable(BOOL enable)
  {
@@ -429,7 +459,8 @@ index 5f88ca1..7ea155a 100644
 -    return ERROR_NOT_SUPPORTED;
 +    /* Check if we really have to do all the process */
 +    if (!controllers[index].vibration_dirty &&
-+        !memcmp(&controllers[index].vibration, vibration, sizeof(*vibration)))
++        controllers[index].vibration.wLeftMotorSpeed == vibration->wLeftMotorSpeed &&
++        controllers[index].vibration.wRightMotorSpeed == vibration->wRightMotorSpeed)
 +        return ERROR_SUCCESS;
 +
 +    controllers[index].vibration = *vibration;
@@ -437,19 +468,19 @@ index 5f88ca1..7ea155a 100644
 +
 +    if (dinput.enabled && controllers[index].caps.jedi)
 +    {
-+        int power;
++        int strength;
 +        /* FIXME: we can't set the speed of each motor so do an average */
-+        power = DI_FFNOMINALMAX * (vibration->wLeftMotorSpeed + vibration->wRightMotorSpeed) / 2 / 0xFFFF;
++        strength = DI_FFNOMINALMAX * (vibration->wLeftMotorSpeed + vibration->wRightMotorSpeed) / 2 / 0xFFFF;
 +
 +        TRACE("Vibration left/right speed %d/%d translated to %d\n\n",
-+              vibration->wLeftMotorSpeed, vibration->wRightMotorSpeed, power);
-+        dinput_send_effect(index, power);
++              vibration->wLeftMotorSpeed, vibration->wRightMotorSpeed, strength);
++        dinput_send_effect(index, strength);
 +    }
 +    return ERROR_SUCCESS;
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -79,62 +449,113 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,62 +480,113 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -580,7 +611,7 @@ index 5f88ca1..7ea155a 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -146,17 +567,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -146,17 +598,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
      if (!controllers[index].connected)
          return ERROR_DEVICE_NOT_CONNECTED;
  
@@ -608,8 +639,7 @@ index 5f88ca1..7ea155a 100644
          return ERROR_DEVICE_NOT_CONNECTED;
 +    if (type != BATTERY_DEVTYPE_GAMEPAD && type != BATTERY_DEVTYPE_HEADSET)
 +        return ERROR_BAD_ARGUMENTS;
- 
--    return ERROR_NOT_SUPPORTED;
++
 +    if (!controllers[index].caps.wireless)
 +    {
 +        battery->BatteryType = BATTERY_TYPE_WIRED;
@@ -624,6 +654,7 @@ index 5f88ca1..7ea155a 100644
 +        battery->BatteryType = BATTERY_TYPE_NIMH;
 +        battery->BatteryLevel = BATTERY_LEVEL_MEDIUM;
 +    }
-+
+ 
+-    return ERROR_NOT_SUPPORTED;
 +    return ERROR_SUCCESS;
  }
