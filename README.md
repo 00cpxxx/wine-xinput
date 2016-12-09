@@ -30,6 +30,7 @@ Games tested so far:
 * DiRT 3 (tested by user Enverex)
 * Double Dragon Neon (tested by user Enverex)
 * Momodora: Reverie Under the Moonlight
+* Never Alone
 * The Adventures of Shuggy
 * X-Blades
 
