@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..4e79d0d 100644
+index 5f88ca1..0b787b4 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -275,11 +275,11 @@ index 5f88ca1..4e79d0d 100644
 +        static GUID types[2];
 +        int i;
 +
-+        types[0] = GUID_ConstantForce;
-+        types[1] = GUID_Square;
++        types[0] = GUID_Square;
++        types[1] = GUID_ConstantForce;
 +        for (i = 0; i < 2; i++)
 +        {
-+            effect->cbTypeSpecificParams = i ? sizeof(u.periodic) : sizeof(u.constant);
++            effect->cbTypeSpecificParams = !i ? sizeof(u.periodic) : sizeof(u.constant);
 +
 +            hr = IDirectInputDevice8_CreateEffect(controllers[index].device, &types[i],
 +                                                  effect, instance, NULL);
@@ -480,7 +480,7 @@ index 5f88ca1..4e79d0d 100644
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -79,62 +480,113 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,62 +480,116 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -518,8 +518,11 @@ index 5f88ca1..4e79d0d 100644
  
 -    return ERROR_NOT_SUPPORTED;
 +    dinput_update(index);
-+    /* Broforce does not pass a correct XINPUT_STATE_EX, so only copy the old struct size */
-+    *(XINPUT_GAMEPAD *)state_ex = *(XINPUT_GAMEPAD *)&controllers[index].state_ex;
++
++    /* Broforce does not pass a correct XINPUT_STATE_EX and crashes, so only
++     * copy the old struct size as the new parameter is reserved anyway */
++    state_ex->dwPacketNumber = controllers[index].state_ex.dwPacketNumber;
++    *(XINPUT_GAMEPAD *)&state_ex->Gamepad = *(XINPUT_GAMEPAD *)&controllers[index].state_ex.Gamepad;
 +
 +    return ERROR_SUCCESS;
  }
@@ -611,7 +614,7 @@ index 5f88ca1..4e79d0d 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -146,17 +598,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -146,17 +601,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
      if (!controllers[index].connected)
          return ERROR_DEVICE_NOT_CONNECTED;
  
