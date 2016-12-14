@@ -8,7 +8,7 @@ I did not limit the implementation to Microsoft only controllers, it will work w
 This is a patch, it means you are required to apply it in to Wine source and compile Wine with it. If you are not into compiling Wine yourself and prefer using your distro packages you can check https://github.com/KoKuToru/koku-xinput-wine which still requires compilation but uses a different approach that does not touch Wine code.
 
 There are 2 different patches:
-* xinput_obiwan.patch - For Wine up to 1.9.17.
+* xinput_obiwan.patch - For Wine up to 1.9.17 (deprecated).
 * xinput_quigon.patch - For Wine 1.9.19 onwards.
 
 I commited many changes to the official Wine code between 1.9.17 and 1.9.19 so there is no 1.9.18 patch version.
