@@ -29,6 +29,7 @@ Games tested so far:
 * Castle Crashers
 * DiRT 3 (tested by user Enverex)
 * Double Dragon Neon (tested by user Enverex)
+* Fable Anniversary Edition
 * Momodora: Reverie Under the Moonlight
 * Never Alone
 * The Adventures of Shuggy
