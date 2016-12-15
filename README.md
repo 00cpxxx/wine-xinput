@@ -33,11 +33,12 @@ I appreciate more testing and feedback.
 * Broforce
 * Brothers: A Tale of Two Sons
 * Castle Crashers
-* DiRT 3 (tested by user Enverex)
-* Double Dragon Neon (tested by user Enverex)
+* DiRT 3 (tested by user @Enverex)
+* Double Dragon Neon (tested by user @Enverex)
 * Fable Anniversary Edition
 * Momodora: Reverie Under the Moonlight
 * Never Alone
+* Spelunky
 * The Adventures of Shuggy
 * VVVVVV
 * X-Blades
