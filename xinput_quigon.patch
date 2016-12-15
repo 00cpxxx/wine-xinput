@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..0b787b4 100644
+index 5f88ca1..074f7c9 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -29,7 +29,7 @@ index 5f88ca1..0b787b4 100644
  #include "config.h"
  #include <assert.h>
  #include <stdarg.h>
-@@ -27,18 +29,386 @@
+@@ -27,18 +29,385 @@
  #include "winbase.h"
  #include "winerror.h"
  
@@ -162,7 +162,7 @@ index 5f88ca1..0b787b4 100644
 +        WARN("Failed to set axis range (0x%x)\n", hr);
 +        return FALSE;
 +    }
-+        return TRUE;
++    return TRUE;
 +}
 +
 +static void dinput_joystate_to_xinput(DIJOYSTATE2 *js, XINPUT_GAMEPAD_EX *gamepad, struct CapsFlags *caps)
@@ -384,7 +384,6 @@ index 5f88ca1..0b787b4 100644
 +        if (!dinput_acquire(index))
 +            return;
 +
-+        IDirectInputDevice8_Poll(controllers[index].device);
 +        hr = IDirectInputDevice_GetDeviceState(controllers[index].device, sizeof(data), &data);
 +        if (FAILED(hr))
 +        {
@@ -418,7 +417,7 @@ index 5f88ca1..0b787b4 100644
  BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  {
      switch(reason)
-@@ -52,23 +422,54 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
+@@ -52,23 +421,54 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  
  void WINAPI XInputEnable(BOOL enable)
  {
@@ -480,7 +479,7 @@ index 5f88ca1..0b787b4 100644
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -79,62 +480,116 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,62 +479,116 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -614,7 +613,7 @@ index 5f88ca1..0b787b4 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -146,17 +601,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -146,17 +600,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
      if (!controllers[index].connected)
          return ERROR_DEVICE_NOT_CONNECTED;
  
