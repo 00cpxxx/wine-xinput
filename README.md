@@ -43,6 +43,10 @@ I appreciate more testing and feedback.
 * VVVVVV
 * X-Blades
 
+### Games that won't work
+
+* ~~Sonic & All-Stars Racing Transformed~~ (mixed Dinput+XInput explained in Troubleshooting)
+
 ### Gamepads tested so far
 
 * Microsoft XBOX 360 gamepad
