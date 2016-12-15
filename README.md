@@ -23,7 +23,8 @@ Why the silly patch names? After working so long with "force feedback" in Wine I
 
 Why not merging this into official Wine? Because Wine is working towards a different approach to unify joystick input for the different interfaces (WinMM, DirectInput, XInput) using a single HID library. This will simplify the implementations of these DLL's while keeping all ugly code into a single place. So my approach of Xinput from Dinput is not acceptable.
 
-Games tested so far:
+# Games tested so far
+
 * Broforce
 * Brothers: A Tale of Two Sons
 * Castle Crashers
@@ -33,9 +34,16 @@ Games tested so far:
 * Momodora: Reverie Under the Moonlight
 * Never Alone
 * The Adventures of Shuggy
+* VVVVVV
 * X-Blades
 
 I appreciate more testing and feedback. 
+
+# Troubleshooting
+
+If the game is always looking up or auto selecting axis 3 or Z to anything when you are defining the controls then the game uses a mixed DirectInput + XInput. For now there is no solution to this due to 2 different problems in Wine:
+1 - Wine does not implement the axes mixing that MS does using the shoulder triggers. In Windows the shoulders act as a single axis, while in Wine they are reported as 2 different axes.
+2 - Wine does not implement adding the controllers to the PnP devies and append the expected MS "hack" in the controller ID to make the games distinguish between DirectInput and XInput devices.
 
 If the patch is compiled but the game still didn't recognize the controller something is wrong, it could be due to different reasons. For instance:
 * Wine DirectInput did not find your controller, check "wine control joy.cpl". Always start the game with the controller previously plugged.
