@@ -1,5 +1,6 @@
 # wine-xinput
-XInput for Wine based on DirectInput.
+
+A XInput implementation for Wine based on DirectInput. Supports 4 controllers and is supposed to work with non Xbox controllers (but with unknown unpredictable mapping). Distributed in the form of a patch that requires Wine to be compiled from source. Read more below.
 
 ### Introduction
 
@@ -25,6 +26,8 @@ Why the silly patch names? After working so long with "force feedback" in Wine I
 
 Why not merging this into official Wine? Because Wine is working towards a different approach to unify joystick input for the different interfaces (WinMM, DirectInput, XInput) using a single HID library. This will simplify the implementations of these DLL's while keeping all ugly code into a single place. So my approach of Xinput from Dinput is not acceptable.
 
+I appreciate more testing and feedback. 
+
 ### Games tested so far
 
 * Broforce
@@ -39,7 +42,13 @@ Why not merging this into official Wine? Because Wine is working towards a diffe
 * VVVVVV
 * X-Blades
 
-I appreciate more testing and feedback. 
+### Gamepads tested so far
+
+* Microsoft XBOX 360 gamepad
+* PS3 gamepad (requires remapping using jstest-gtk)
+* Generic Twin stick gamepads (require remapping using jstest-gtk)
+* Super Nintendo like USB controller (useful only for left stick only games)
+* Generic 8 button controller (useful only for left stick only games)
 
 ### Troubleshooting
 
