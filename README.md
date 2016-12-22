@@ -36,6 +36,8 @@ I appreciate more testing and feedback.
 * DiRT 3 (tested by user @Enverex)
 * Double Dragon Neon (tested by user @Enverex)
 * Fable Anniversary Edition
+* Lego Lord of the Rings (tested by @wberrier)
+* Lego Marvel Super Heroes (tested by @wberrier)
 * Momodora: Reverie Under the Moonlight
 * Never Alone
 * Spelunky
@@ -45,7 +47,9 @@ I appreciate more testing and feedback.
 
 ### Games that won't work
 
-* ~~Sonic & All-Stars Racing Transformed~~ (mixed Dinput+XInput explained in Troubleshooting)
+* Lego Batman (mixed Dinput+XInput explained in Troubleshooting)
+* Lego Star Wars (mixed Dinput+XInput explained in Troubleshooting)
+* Sonic & All-Stars Racing Transformed (mixed Dinput+XInput explained in Troubleshooting)
 
 ### Gamepads tested so far
 
