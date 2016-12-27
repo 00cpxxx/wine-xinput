@@ -40,6 +40,7 @@ I appreciate more testing and feedback.
 * Lego Marvel Super Heroes (tested by @wberrier)
 * Momodora: Reverie Under the Moonlight
 * Never Alone
+* Shadow Warrior Classic Redux
 * Spelunky
 * The Adventures of Shuggy
 * VVVVVV
