@@ -41,6 +41,7 @@ I appreciate more testing and feedback.
 * Momodora: Reverie Under the Moonlight
 * Never Alone
 * Shadow Warrior Classic Redux
+* Shovel Knight
 * Spelunky
 * The Adventures of Shuggy
 * VVVVVV
