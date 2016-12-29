@@ -33,8 +33,10 @@ I appreciate more testing and feedback.
 * Broforce
 * Brothers: A Tale of Two Sons
 * Castle Crashers
+* Cortex Command
 * DiRT 3 (tested by user @Enverex)
 * Double Dragon Neon (tested by user @Enverex)
+* Duck Tales Remastered
 * Fable Anniversary Edition
 * Lego Lord of the Rings (tested by @wberrier)
 * Lego Marvel Super Heroes (tested by @wberrier)
