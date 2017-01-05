@@ -42,6 +42,7 @@ I appreciate more testing and feedback.
 * Lego Marvel Super Heroes (tested by @wberrier)
 * Momodora: Reverie Under the Moonlight
 * Never Alone
+* Rabi-Ribi
 * Shadow Warrior Classic Redux
 * Shovel Knight
 * Spelunky
