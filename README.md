@@ -47,6 +47,7 @@ I appreciate more testing and feedback.
 * Shovel Knight
 * Spelunky
 * The Adventures of Shuggy
+* Tomb Raider 2013
 * VVVVVV
 * X-Blades
 
