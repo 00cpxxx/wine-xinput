@@ -38,6 +38,7 @@ I appreciate more testing and feedback.
 * Double Dragon Neon (tested by user @Enverex)
 * Duck Tales Remastered
 * Fable Anniversary Edition
+* IKUSAAAAAAAN
 * Lego Lord of the Rings (tested by @wberrier)
 * Lego Marvel Super Heroes (tested by @wberrier)
 * Momodora: Reverie Under the Moonlight
