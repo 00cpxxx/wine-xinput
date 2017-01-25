@@ -44,6 +44,7 @@ I appreciate more testing and feedback.
 * Momodora: Reverie Under the Moonlight
 * Never Alone
 * Rabi-Ribi
+* Roguelight
 * Shadow Warrior Classic Redux
 * Shovel Knight
 * Spelunky
