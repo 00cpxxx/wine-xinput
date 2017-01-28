@@ -419,7 +419,7 @@ index 5f88ca1..074f7c9 100644
      switch(reason)
 @@ -52,23 +421,54 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
  
- void WINAPI XInputEnable(BOOL enable)
+ void WINAPI DECLSPEC_HOTPATCH XInputEnable(BOOL enable)
  {
 -    /* Setting to false will stop messages from XInputSetState being sent
 -    to the controllers. Setting to true will send the last vibration
