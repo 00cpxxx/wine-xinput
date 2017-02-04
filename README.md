@@ -28,7 +28,7 @@ Why not merging this into official Wine? Because Wine is working towards a diffe
 
 I appreciate more testing and feedback. 
 
-### Games tested so far
+### Games that work
 
 * Broforce
 * Brothers: A Tale of Two Sons
@@ -49,6 +49,7 @@ I appreciate more testing and feedback.
 * Shovel Knight
 * Spelunky
 * The Adventures of Shuggy
+* The Legend of Korra (tested by @zockolade)
 * Tomb Raider 2013
 * VVVVVV
 * X-Blades
