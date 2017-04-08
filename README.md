@@ -43,6 +43,7 @@ All kudos to Tetralet for rebasing.
 * Double Dragon Neon (tested by user @Enverex)
 * Duck Tales Remastered
 * Fable Anniversary Edition
+* Gal*Gun: Double Peace
 * IKUSAAAAAAAN
 * Lego Lord of the Rings (tested by @wberrier)
 * Lego Marvel Super Heroes (tested by @wberrier)
