@@ -28,6 +28,11 @@ Why not merging this into official Wine? Because Wine is working towards a diffe
 
 I appreciate more testing and feedback. 
 
+### Wine-Staging
+
+If you are on Staging use this version instead: https://github.com/Tetralet/wine-xinput
+All kudos to Tetralet for rebasing.
+
 ### Games that work
 
 * Broforce
