@@ -1,5 +1,5 @@
 diff --git a/dlls/xinput1_3/Makefile.in b/dlls/xinput1_3/Makefile.in
-index cf8f730..37621fa 100644
+index cf8f730e99..37621faca9 100644
 --- a/dlls/xinput1_3/Makefile.in
 +++ b/dlls/xinput1_3/Makefile.in
 @@ -1,5 +1,6 @@
@@ -10,7 +10,7 @@ index cf8f730..37621fa 100644
  C_SRCS = \
  	xinput1_3_main.c
 diff --git a/dlls/xinput1_3/xinput1_3_main.c b/dlls/xinput1_3/xinput1_3_main.c
-index 5f88ca1..074f7c9 100644
+index 402bd2f468..c1fb6cc98a 100644
 --- a/dlls/xinput1_3/xinput1_3_main.c
 +++ b/dlls/xinput1_3/xinput1_3_main.c
 @@ -1,6 +1,7 @@
@@ -479,7 +479,7 @@ index 5f88ca1..074f7c9 100644
  }
  
  DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
-@@ -79,62 +479,116 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
+@@ -79,35 +479,39 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE* state)
          XINPUT_STATE_EX state_ex;
      } xinput;
      DWORD ret;
@@ -527,8 +527,9 @@ index 5f88ca1..074f7c9 100644
  }
  
  DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE keystroke)
- {
-     FIXME("(index %u, reserved %u, keystroke %p) Stub!\n", index, reserved, keystroke);
+@@ -117,27 +521,77 @@ DWORD WINAPI XInputGetKeystroke(DWORD index, DWORD reserved, PXINPUT_KEYSTROKE k
+     if (!warn_once++)
+         FIXME("(index %u, reserved %u, keystroke %p) Stub!\n", index, reserved, keystroke);
  
 -    if (index >= XUSER_MAX_COUNT)
 -        return ERROR_BAD_ARGUMENTS;
@@ -613,7 +614,7 @@ index 5f88ca1..074f7c9 100644
  }
  
  DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUID* capture_guid)
-@@ -146,17 +600,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
+@@ -149,17 +603,43 @@ DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD index, GUID* render_guid, GUI
      if (!controllers[index].connected)
          return ERROR_DEVICE_NOT_CONNECTED;
  
