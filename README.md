@@ -59,6 +59,7 @@ All kudos to Tetralet for rebasing.
 * Tomb Raider 2013
 * VVVVVV
 * X-Blades
+* Yooka Laylee
 
 ### Games that won't work
 
