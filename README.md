@@ -49,6 +49,7 @@ All kudos to Tetralet for rebasing.
 * Lego Marvel Super Heroes (tested by @wberrier)
 * Momodora: Reverie Under the Moonlight
 * Never Alone
+* No Man's Sky
 * Rabi-Ribi
 * Roguelight
 * Shadow Warrior Classic Redux
