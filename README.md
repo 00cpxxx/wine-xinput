@@ -33,8 +33,9 @@ I appreciate more testing and feedback.
 If you are on Staging use this version instead: https://github.com/Tetralet/wine-xinput
 All kudos to Tetralet for rebasing.
 
-### Games that work
+### Games that were tested and work
 
+* Boneko
 * Broforce
 * Brothers: A Tale of Two Sons
 * Castle Crashers
