@@ -51,6 +51,7 @@ All kudos to Tetralet for rebasing.
 * Momodora: Reverie Under the Moonlight
 * Never Alone
 * No Man's Sky
+* Overcooked
 * Rabi-Ribi
 * Roguelight
 * Shadow Warrior Classic Redux
