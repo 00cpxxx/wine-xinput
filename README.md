@@ -83,7 +83,7 @@ All kudos to Tetralet for rebasing.
 If the game is always looking up or auto selecting axis 3 or Z to anything when you are defining the controls then the game uses a mixed DirectInput + XInput. For now there is no solution to this due to 2 different problems in Wine:
 
 1. Wine does not implement the axes mixing that MS does using the shoulder triggers. In Windows the shoulders act as a single axis, while in Wine they are reported as 2 different axes.
-2. Wine does not implement adding the controllers to the PnP devies and append the expected MS "hack" in the controller ID to make the games distinguish between DirectInput and XInput devices.
+2. Wine does not implement adding the controllers to the PnP devices and append the expected MS "hack" in the controller ID to make the games distinguish between DirectInput and XInput devices.
 
 If the patch is compiled but the game still didn't recognize the controller something is wrong, it could be due to different reasons. For instance:
 * Wine DirectInput did not find your controller, check "wine control joy.cpl". Always start the game with the controller previously plugged.
