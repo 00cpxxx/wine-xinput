@@ -61,6 +61,7 @@ All kudos to Tetralet for rebasing.
 * The Legend of Korra (tested by @zockolade)
 * Tomb Raider 2013
 * VVVVVV
+* Witcher 3 (tested by @mfxbe)
 * X-Blades
 * Yooka Laylee
 
