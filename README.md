@@ -62,6 +62,7 @@ All kudos to Tetralet for rebasing.
 * Tomb Raider 2013
 * VVVVVV
 * Witcher 3 (tested by @mfxbe)
+* Wonder Boy Dragon's Trap
 * X-Blades
 * Yooka Laylee
 
