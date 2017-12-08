@@ -1,3 +1,5 @@
+# Due to changes in Wine code base the patch is not compatible with Wine >= 2.18. Updates will be done at some point before 2018.
+
 # wine-xinput
 
 A XInput implementation for Wine based on DirectInput. Supports 4 controllers and is supposed to work with non Xbox controllers (but with unknown unpredictable mapping). Distributed in the form of a patch that requires Wine to be compiled from source. Read more below.
