@@ -1,4 +1,4 @@
-# Due to changes in Wine code base the patch is not compatible with Wine >= 2.18. Updates will be done at some point before 2018.
+# Due to changes in Wine code base the patch is not compatible with Wine >= 2.18. Updates will be done at some point until March 2018.
 
 # wine-xinput
 
@@ -46,6 +46,7 @@ All kudos to Tetralet for rebasing.
 * Double Dragon Neon (tested by user @Enverex)
 * Duck Tales Remastered
 * Fable Anniversary Edition
+* Flatout: Ultimate Carnage (teste by user @shooter0106)
 * Gal*Gun: Double Peace
 * IKUSAAAAAAAN
 * Lego Lord of the Rings (tested by @wberrier)
